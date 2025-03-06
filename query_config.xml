@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<query_generation_config>
+  <query_models>
+    <query_model name="default">
+      <prompt_template>You are an expert content adapter specializing in business news. Your task is to generate two search queries based on the following article. Output the two search queries as a JSON array (e.g. ["query1", "query2"]). The queries should help verify the accuracy of the article. Original Article: {article_text}</prompt_template>
+      <request_params>
+        <model>gemini-2.0-flash</model>
+        <temperature>0.4</temperature>
+        <top_k>32</top_k>
+        <top_p>0.95</top_p>
+        <max_tokens>256</max_tokens>
+      </request_params>
+    </query_model>
+  </query_models>
+</query_generation_config>

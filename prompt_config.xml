@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<content_filter_config>
+  <reader_types>
+    <reader_type name="Business">
+      <prompt_template>You are an expert content adapter specializing in business news. Your task is to refine the following business article without adding any new information. Ensure the refined version is at least three times shorter than the original text while preserving key business details. Background: {proficiency}
+
+Original Article: {article_text}
+
+Please output the refined article.</prompt_template>
+      <request_params>
+        <model>gemini-2.0-flash</model>
+        <temperature>0.4</temperature>
+        <top_k>32</top_k>
+        <top_p>0.95</top_p>
+        <max_tokens>8192</max_tokens>
+      </request_params>
+    </reader_type>
+    <reader_type name="IT">
+      <prompt_template>You are an expert content adapter specializing in technical news. Your task is to refine the following technical article without adding any new details. Make sure the refined version is at least three times shorter than the original text while retaining essential technical content. Background: {proficiency}
+
+Original Article: {article_text}
+
+Please output the refined article.</prompt_template>
+      <request_params>
+        <model>gemini-2.0-flash</model>
+        <temperature>0.4</temperature>
+        <top_k>32</top_k>
+        <top_p>0.95</top_p>
+        <max_tokens>8192</max_tokens>
+      </request_params>
+    </reader_type>
+  </reader_types>
+</content_filter_config>
