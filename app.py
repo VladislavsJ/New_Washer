@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import json
 
 # Import our modules
@@ -7,6 +7,11 @@ import config
 
 app = Flask(__name__)
 app.config["DEBUG"] = config.DEBUG
+
+@app.route("/")
+def index():
+    """Serve the main frontend page"""
+    return render_template("index.html")
 
 @app.route("/process-news", methods=["POST"])
 def process_news():
@@ -17,8 +22,10 @@ def process_news():
       - input_type: "url" | "text" | "json"
       - data: The input data (URL, text, or JSON string)
       - reader_type: "IT" or "Business"
-      - proficiency: "Enthusiast", "Bachelor", or "Master"
+      - proficiency:
       -- non mandatory
+      - interest: "Technology", "Business", or "Physical Impelementation"
+    
     Returns a JSON with the refined content and verification report.
     """
     try:
@@ -79,6 +86,7 @@ def process_news():
         return jsonify(output)
     
     except Exception as e:
+        print(f"Error: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":

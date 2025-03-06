@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Cleaner</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Open+Sans:wght@400;600&family=Roboto+Mono&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <h1>News Cleaner</h1>
+
+    <div class="container">
+        <!-- Left Panel: Input -->
+        <div class="panel">
+            <h2>Input</h2>
+
+            <div class="input-type-selector">
+                <div class="input-type-option active" data-type="text">Text</div>
+                <div class="input-type-option" data-type="url">URL</div>
+            </div>
+
+            <div class="button-group">
+                <button id="example-it" class="example-button">IT Example</button>
+                <button id="example-business" class="example-button">Business Example</button>
+            </div>
+
+            <div class="input-group">
+                <label for="input-data">Article Content:</label>
+                <textarea id="input-data" placeholder="Paste your article text here..."></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>Reader Type:</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="it" name="reader-type" value="IT" checked>
+                        <label for="it">IT</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="business" name="reader-type" value="Business">
+                        <label for="business">Business</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="proficiency">Proficiency Level:</label>
+                <textarea id="proficiency" placeholder="e.g., Enthusiast, Bachelor, Master" rows="3">Bachelor</textarea>
+            </div>
+
+            <div class="input-group">
+                <label>Request Preview:</label>
+                <pre id="json-preview" class="json-preview"></pre>
+            </div>
+
+            <button id="send-button">Process Article</button>
+        </div>
+
+        <!-- Right Panel: Results -->
+        <div class="panel">
+            <h2>Results</h2>
+
+            <div id="result-container">
+                <div id="newspaper-section" class="result-section"></div>
+                <div id="verification-section" class="result-section"></div>
+                <div id="links-section" class="result-section"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

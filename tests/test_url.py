@@ -7,7 +7,7 @@ def test_url_input():
         "input_type": "url",
         "data": "https://www.deepseek.com/",
         "reader_type": "Business",
-        "proficiency": "Master degree, know how to use AI to make money, money, money, Always sunny in the rich man's world"
+        "proficiency": "Master degree in Business, I know all math that is related to money, know how to use AI to make money, money, money, Always sunny in the rich man's world"
         # ABBA Will damage promt for sure, but it's just for testing, and I am not promt engineer at all =/
     }
     headers = {"Content-Type": "application/json"}
