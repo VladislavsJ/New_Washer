@@ -41,8 +41,7 @@ async def scrape_web_page(url, user_query=None):
             print(f"Error scraping {url}: {str(e)}")
             return None
 
-# Since app.py calls this synchronously, we need a wrapper
-
+# app.py calls this synchronously, we need a wrapper
 def scrape_web_pages(urls, queries):
     # Create new event loop for this thread
     loop = asyncio.new_event_loop()
@@ -53,13 +52,11 @@ def scrape_web_pages(urls, queries):
         results = loop.run_until_complete(asyncio.gather(*tasks))
         return list( results)
     finally:
-        # Clean up
         loop.close()
-
-
-if __name__ == "__main__":
-    asyncio.run(scrape_web_page("https://www.nbcnews.com/business"))
-
+        
+def scrape_web_page_sync(url, user_query=None):
+    import asyncio
+    return asyncio.run(scrape_web_page(url, user_query))
 
 def google_search(query):
     url = "https://www.googleapis.com/customsearch/v1"

@@ -52,7 +52,8 @@ Though Trump had seemed to acknowledge in a recent podcast interview that he had
 
 """,
     "reader_type": "IT",
-    "proficiency": "Bachelor, enthusiast about AI, and know what Transformer models are"
+    "proficiency": "Bachelor, smartest guy in the room, knows just about everything, AI girl with 1000B parameters is his future wife"
+
 }
 
 # Set headers

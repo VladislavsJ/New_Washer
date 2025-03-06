@@ -19,8 +19,6 @@ def process_news():
       - reader_type: "IT" or "Business"
       - proficiency: "Enthusiast", "Bachelor", or "Master"
       -- non mandatory
-      - interest: "Technology", "Business", or "Physical Impelementation"
-    
     Returns a JSON with the refined content and verification report.
     """
     try:
@@ -31,12 +29,16 @@ def process_news():
         
         # Get the original article text
         if input_data["input_type"] == "url":
-            # For URL, use web scraper to get article text.
-            article_text = web_scraper.scrape_web_page_sync(input_data["data"])
+            try:
+                article_text = web_scraper.scrape_web_page_sync(input_data["data"])
+                if not article_text:
+                    return jsonify({"error": "Failed to scrape URL - no content retrieved"}), 400
+                print(f"Scraped text length: {len(article_text)}")  # Debug logging
+            except Exception as e:
+                return jsonify({"error": f"Failed to scrape URL: {str(e)}"}), 400
         elif input_data["input_type"] == "text":
             article_text = input_data["data"]
         elif input_data["input_type"] == "json":
-            # Assuming the JSON contains a field "article" with the text.
             try:
                 json_data = json.loads(input_data["data"])
                 article_text = json_data.get("article", "")
@@ -48,32 +50,31 @@ def process_news():
         
         # 1. Content Filtering based on reader type and proficiency
         filtered_text = content_filter.filter_content(article_text, reader_type, proficiency)
-        #filtered_text="TEST"
-        # 2. Generate search queries (RAG part)
+
         queries = query_generation.generate_search_queries(article_text)
-        # Create arrays of queries and get corresponding links and data
         #queries = ["OpenAI GPT-4.5 capabilities and limitations", "Microsoft Azure AI supercomputers training AI models"]
         links = web_scraper.google_searches(queries)  # Get links for each query
         scraped_data = web_scraper.scrape_web_pages(links, queries)  # Get scraped content for each link
         
-        # Create list of tuples connecting related data
         connected_data = list(zip(queries, links, scraped_data))
-        # Now connected_data[0] contains (queries[0], links[0], scraped_data[0]) etc.
         
-        # 3. For each query, perform a search and scrape the top result.
-        # NOTE: In this stub, we are assuming that the query directly gives a URL.
-        # In production, you should integrate with a search API (e.g., Google Custom Search)
-        # and then scrape the top two links.
-        # Here, we'll simply assume that queries[0] and queries[1] are URLs (for demo purposes).
-        # Replace the following with your actual search integration:
+        # For each query, perform a search and scrape the top result.
 
-        # 4. Numerical Comparison between original article and scraped data.
+        # 4.  Comparison between original article and scraped data.
         verification_report = comparison.get_verification_report(article_text, connected_data)
         #add links to the verification report
-        verification_report["links"] = links
+
 
         # 5. Generate final output
-        output = output_generator.generate_final_output(filtered_text, verification_report)
+        try:
+            output = output_generator.generate_final_output(filtered_text, verification_report, links)
+        except Exception as e:
+            output = {
+                "error": f"Error generating final output: {str(e)}",
+                "filtered_text": filtered_text,
+                "verification_report": verification_report,
+                "links": links
+            }
         
         return jsonify(output)
     

@@ -1,12 +1,11 @@
-def generate_final_output(filtered_text, verification_report):
+def generate_final_output(filtered_text, verification_report, links):
     """
-    Combines the filtered text and the verification report into the final output.
+    Combines the filtered text, verification report, and links into the final output.
     Returns a dictionary suitable for JSON output.
     """
-    final_text = f"{filtered_text}\n\n---\nVerification Result: {verification_report['result']}\nDetails: {verification_report['details']}"
-    
-    return {
-        "refined_content": filtered_text,
+    final_output = {
+        "filtered_text": filtered_text,
         "verification_report": verification_report,
-        "final_output": final_text
+        "links": links
     }
+    return final_output

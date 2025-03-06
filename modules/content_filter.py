@@ -1,6 +1,5 @@
 import requests
 import json
-import os
 import xml.etree.ElementTree as ET
 from pathlib import Path
 try:
@@ -38,54 +37,6 @@ def load_prompt_config(config_file='prompt_config.xml'):
         }
     
     return config
-
-def create_default_config(config_file):
-    """
-    Create a default XML configuration file with initial reader types for Business and IT.
-    Each reader type includes its prompt template and request parameters.
-    The prompt instructs the model to refine the given news article without adding any new information,
-    and to produce an output that is at least three times shorter than the original text.
-    """
-    root = ET.Element('content_filter_config')
-    reader_types = ET.SubElement(root, 'reader_types')
-    
-    # Business reader configuration
-    business = ET.SubElement(reader_types, 'reader_type', name='Business')
-    ET.SubElement(business, 'prompt_template').text = (
-        "You are an expert content adapter specializing in business news. "
-        "Your task is to refine the following business article without adding any new information. "
-        "Ensure the refined version is at least three times shorter than the original text while preserving key business details. "
-        "Background: {proficiency}\n\n"
-        "Original Article: {article_text}\n\n"
-        "Please output the refined article."
-    )
-    business_params = ET.SubElement(business, 'request_params')
-    ET.SubElement(business_params, 'model').text = LLM_MODEL
-    ET.SubElement(business_params, 'temperature').text = '0.4'
-    ET.SubElement(business_params, 'top_k').text = '32'
-    ET.SubElement(business_params, 'top_p').text = '0.95'
-    ET.SubElement(business_params, 'max_tokens').text = '8192'
-    
-    # IT reader configuration
-    it = ET.SubElement(reader_types, 'reader_type', name='IT')
-    ET.SubElement(it, 'prompt_template').text = (
-        "You are an expert content adapter specializing in technical news. "
-        "Your task is to refine the following technical article without adding any new details. "
-        "Make sure the refined version is at least three times shorter than the original text while retaining essential technical content. "
-        "Background: {proficiency}\n\n"
-        "Original Article: {article_text}\n\n"
-        "Please output the refined article."
-    )
-    it_params = ET.SubElement(it, 'request_params')
-    ET.SubElement(it_params, 'model').text = LLM_MODEL
-    ET.SubElement(it_params, 'temperature').text = '0.4'
-    ET.SubElement(it_params, 'top_k').text = '32'
-    ET.SubElement(it_params, 'top_p').text = '0.95'
-    ET.SubElement(it_params, 'max_tokens').text = '8192'
-    
-    tree = ET.ElementTree(root)
-    ET.indent(tree, space="  ")
-    tree.write(config_file, encoding='utf-8', xml_declaration=True)
 
 def filter_content(article_text, reader_type, proficiency, config_file='prompt_config.xml'):
     """
@@ -157,36 +108,53 @@ def filter_content(article_text, reader_type, proficiency, config_file='prompt_c
     except Exception as e:
         return f"Error making API request: {str(e)}"
 
-def add_reader_type(name, prompt_template, request_params, config_file='prompt_config.xml'):
+#def add_reader_type(name, prompt_template, request_params, config_file='prompt_config.xml'):
+#XML file give options to add new reader types, but not implemented yet.
+
+def create_default_config(config_file):
     """
-    Add or update a reader type in the XML configuration.
-    `request_params` should be a dictionary containing keys such as model, temperature, top_k, top_p, and max_tokens.
+    Create a default XML configuration file with initial reader types for Business and IT.
+    Each reader type includes its prompt template and request parameters.
+    The prompt instructs the model to refine the given news article without adding any new information,
+    and to produce an output that is at least three times shorter than the original text.
     """
-    tree = ET.parse(config_file)
-    root = tree.getroot()
-    reader_types_elem = root.find('reader_types')
-
-    # Check if the reader type already exists
-    existing = reader_types_elem.find(f"reader_type[@name='{name}']")
-    if existing is None:
-        new_reader = ET.SubElement(reader_types_elem, 'reader_type', name=name)
-    else:
-        new_reader = existing
-
-    # Update or add the prompt template
-    prompt_elem = new_reader.find('prompt_template')
-    if prompt_elem is None:
-        prompt_elem = ET.SubElement(new_reader, 'prompt_template')
-    prompt_elem.text = prompt_template
-
-    # Update or create the request_params element
-    req_params_elem = new_reader.find('request_params')
-    if req_params_elem is not None:
-        new_reader.remove(req_params_elem)
-    req_params_elem = ET.SubElement(new_reader, 'request_params')
-    for key, value in request_params.items():
-        ET.SubElement(req_params_elem, key).text = str(value)
+    root = ET.Element('content_filter_config')
+    reader_types = ET.SubElement(root, 'reader_types')
     
+    # Business reader configuration
+    business = ET.SubElement(reader_types, 'reader_type', name='Business')
+    ET.SubElement(business, 'prompt_template').text = (
+        "You are an expert content adapter specializing in business news. "
+        "Your task is to refine the following business article without adding any new information. "
+        "Ensure the refined version is at least three times shorter than the original text while preserving key business details. "
+        "Background: {proficiency}\n\n"
+        "Original Article: {article_text}\n\n"
+        "Please output the refined article."
+    )
+    business_params = ET.SubElement(business, 'request_params')
+    ET.SubElement(business_params, 'model').text = LLM_MODEL
+    ET.SubElement(business_params, 'temperature').text = '0.4'
+    ET.SubElement(business_params, 'top_k').text = '32'
+    ET.SubElement(business_params, 'top_p').text = '0.95'
+    ET.SubElement(business_params, 'max_tokens').text = '8192'
+    
+    # IT reader configuration
+    it = ET.SubElement(reader_types, 'reader_type', name='IT')
+    ET.SubElement(it, 'prompt_template').text = (
+        "You are an expert content adapter specializing in technical news. "
+        "Your task is to refine the following technical article without adding any new details. "
+        "Make sure the refined version is at least three times shorter than the original text while retaining essential technical content. "
+        "Background: {proficiency}\n\n"
+        "Original Article: {article_text}\n\n"
+        "Please output the refined article."
+    )
+    it_params = ET.SubElement(it, 'request_params')
+    ET.SubElement(it_params, 'model').text = LLM_MODEL
+    ET.SubElement(it_params, 'temperature').text = '0.4'
+    ET.SubElement(it_params, 'top_k').text = '32'
+    ET.SubElement(it_params, 'top_p').text = '0.95'
+    ET.SubElement(it_params, 'max_tokens').text = '8192'
+    
+    tree = ET.ElementTree(root)
     ET.indent(tree, space="  ")
     tree.write(config_file, encoding='utf-8', xml_declaration=True)
-    return f"Reader type '{name}' added/updated successfully"
