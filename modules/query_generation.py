@@ -64,17 +64,17 @@ def create_default_query_config(config_file):
     ET.SubElement(default_params, 'temperature').text = '0.4'
     ET.SubElement(default_params, 'top_k').text = '32'
     ET.SubElement(default_params, 'top_p').text = '0.95'
-    ET.SubElement(default_params, 'max_tokens').text = '256'
+    ET.SubElement(default_params, 'max_tokens').text = '1000'
     
     tree = ET.ElementTree(root)
     ET.indent(tree, space="  ")
     tree.write(config_file, encoding='utf-8', xml_declaration=True)
 
-def generate_search_queries(article_text, query_model_name='default', config_file='query_config.xml'):
+def generate_search_queries(article_text, query_model_name="default", config_file='query_config.xml'):
     """
     Generates two search queries based on the article text.
-    The queries are intended to help verify the article's accuracy (without including numerical values).
-    The output is parsed into a list, isert queries into the brackets " ", for example: ["query1", "query2"], for easier parsing.
+    The queries are intended to help verify the article's accuracy.
+    The output is parsed into a list, isert queries into the brackets " ", ["query1", "query2"], for easier parsing.
     """
     config = load_query_config(config_file)
     if query_model_name not in config['query_models']:

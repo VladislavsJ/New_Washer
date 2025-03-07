@@ -43,6 +43,8 @@ def filter_content(article_text, reader_type, proficiency, config_file='prompt_c
     Tailor the article text based on the reader type and proficiency level using the LLM API.
     Loads the prompt template and request parameters for the given reader type from the XML file.
     """
+        # Retrieve API key from the environment (or use a fallback)
+    api_key = LLM_API_KEY
     config = load_prompt_config(config_file)
     if reader_type not in config['reader_types']:
         available = ', '.join(config['reader_types'].keys())
@@ -55,8 +57,7 @@ def filter_content(article_text, reader_type, proficiency, config_file='prompt_c
     # Format the prompt with the provided article and proficiency
     prompt = prompt_template.format(proficiency=proficiency, article_text=article_text)
 
-    # Retrieve API key from the environment (or use a fallback)
-    api_key = LLM_API_KEY
+
     
     # Extract and convert request parameters
     model = request_params.get('model')
@@ -115,8 +116,6 @@ def create_default_config(config_file):
     """
     Create a default XML configuration file with initial reader types for Business and IT.
     Each reader type includes its prompt template and request parameters.
-    The prompt instructs the model to refine the given news article without adding any new information,
-    and to produce an output that is at least three times shorter than the original text.
     """
     root = ET.Element('content_filter_config')
     reader_types = ET.SubElement(root, 'reader_types')

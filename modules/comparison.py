@@ -8,7 +8,7 @@ import config
 def generate_llm_prompt(article: str, connected_data: list) -> str:
     """
     Generates an LLM prompt by inserting the newspaper article and external sources.
-    
+    #idea is to use external sources as a RAG to verify the article, but I can't say that it's working as I expect. =/
     Parameters:
         article (str): The full text of the newspaper article.
         connected_data (list): A list of tuples in the format (query, link, scraped_data).
@@ -22,10 +22,10 @@ def generate_llm_prompt(article: str, connected_data: list) -> str:
         "For crucial claims in the article, determine if the extrnal source contradict then mention it,",
         "if the external source confirms the claim, then write summary, does source are abble to verify the claim or not.",
         "make it short and concise, maximum 200 words.",
-        "Newspaper Article:",
+        "This is the Newspaper Article to be verified:",
         article,
         "",
-        "External Sources:"
+        "These are the External Sources:"
     ]
     
     for idx, (query, link, scraped_data) in enumerate(connected_data, start=1):
@@ -44,15 +44,6 @@ def generate_llm_prompt(article: str, connected_data: list) -> str:
     return "\n".join(prompt_lines)
 
 def call_llm(prompt: str) -> str:
-    """
-    Calls the LLM with the given prompt and returns the generated output.
-    
-    Parameters:
-        prompt (str): The prompt to send to the LLM.
-    
-    Returns:
-        str: The response from the LLM.
-    """
     model = config.LLM_MODEL_COMPARISON
     api_key = config.LLM_API_KEY_COMPARISON
     temperature = 0.25
@@ -91,9 +82,6 @@ def call_llm(prompt: str) -> str:
     except Exception as e:
         return f"Error making API request: {str(e)}"
 def get_verification_report(article: str, connected_data: list) -> str:
-    """
-    Generates a verification report by comparing the article with the external sources.
-    """
     prompt = generate_llm_prompt(article, connected_data)
     result = call_llm(prompt)
     return result

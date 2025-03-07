@@ -19,12 +19,10 @@ def process_news():
     Endpoint to process a news article.
     
     Expects a JSON payload with keys:
-      - input_type: "url" | "text" | "json"
-      - data: The input data (URL, text, or JSON string)
+      - input_type: "url" | "text" 
+      - data: The input data (URL, text)
       - reader_type: "IT" or "Business"
-      - proficiency:
-      -- non mandatory
-      - interest: "Technology", "Business", or "Physical Impelementation"
+      - proficiency: "Any string explaining the reader's proficiency"
     
     Returns a JSON with the refined content and verification report.
     """
@@ -45,27 +43,26 @@ def process_news():
                 return jsonify({"error": f"Failed to scrape URL: {str(e)}"}), 400
         elif input_data["input_type"] == "text":
             article_text = input_data["data"]
-        elif input_data["input_type"] == "json":
-            try:
-                json_data = json.loads(input_data["data"])
-                article_text = json_data.get("article", "")
-            except Exception as e:
-                return jsonify({"error": f"Error parsing JSON data: {e}"}), 400
         else:
             return jsonify({"error": "Invalid input type provided."}), 400
-        #test pupose, not neede for now. 
         
         # 1. Content Filtering based on reader type and proficiency
         filtered_text = content_filter.filter_content(article_text, reader_type, proficiency)
-
+        # query generation using llm 
         queries = query_generation.generate_search_queries(article_text)
-        #queries = ["OpenAI GPT-4.5 capabilities and limitations", "Microsoft Azure AI supercomputers training AI models"]
+        # For each query, performs a search and scrape the top result.
         links = web_scraper.google_searches(queries)  # Get links for each query
-        scraped_data = web_scraper.scrape_web_pages(links, queries)  # Get scraped content for each link
+        # check if links are valid
+        valid_links = web_scraper.validate_links(links)
+        # get the scraped data
+        if valid_links:
+            scraped_data = web_scraper.scrape_web_pages(valid_links, queries)  # Get scraped content for each link
+        else:
+            error_message = "No valid links found, most probable case, API limit reached"
+            return jsonify({"error": error_message}), 400
         
         connected_data = list(zip(queries, links, scraped_data))
         
-        # For each query, perform a search and scrape the top result.
 
         # 4.  Comparison between original article and scraped data.
         verification_report = comparison.get_verification_report(article_text, connected_data)

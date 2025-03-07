@@ -1,6 +1,5 @@
 import asyncio
 from crawl4ai import *
-
 import requests
 import config
 
@@ -35,7 +34,7 @@ async def scrape_web_page(url, user_query=None):
                 url=url,
                 config=config
             )
-            print(result.markdown)
+            #print(result.markdown)
             return result.markdown
         except Exception as e:
             print(f"Error scraping {url}: {str(e)}")
@@ -76,3 +75,27 @@ def google_search(query):
         return None
 def google_searches(queries):
     return [google_search(query) for query in queries]      
+def validate_links(links):
+    # check format of the link  
+    # check if the link is a valid url
+    valid_links = []
+    
+    for link in links:
+        # Skip None values
+        if link is None:
+            continue
+            
+        # Basic URL format validation
+        if not link.startswith(('http://', 'https://')):
+            continue
+            
+        try:
+            # Check if the URL is accessible
+            response = requests.head(link, timeout=5)
+            if response.status_code < 400:  # Consider any non-error status code as valid
+                valid_links.append(link)
+        except requests.exceptions.RequestException:
+            # Skip URLs that cause request exceptions
+            continue
+    
+    return valid_links
