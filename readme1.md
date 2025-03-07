@@ -4,7 +4,8 @@ This API processes news articles by tailoring content to match the reader's prof
 
 1. **Content Adaptation**: Tailors news content based on the reader's professional background (IT or Business) and expertise level
 2. **Query Generation/web scrapping** using LLM generates the query, that is used to get links from google search, and to scrap the web
-3. **Fact Verification**: Cross-checks the article's claims against external sources to evaluate accuracy
+3. **Fact Verification, RAG**: some sort of RAG, Cross-checks the article's claims against external sources to evaluate accuracy, and if llm training data is old
+is may correct it using newest data from the web
 
  processes json and returns both refined content and a verification report + refernce links.
 
