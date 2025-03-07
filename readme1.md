@@ -48,3 +48,37 @@ Contains configuration variables such as API keys and model identifiers.
 - **Google Custom Search API**: 
 
 The modular architecture allows each component to be developed, tested, and maintained independently. or IT SHOULD allow it. 
+
+
+Adaptive News Verification & Refinement API
+Overview
+This API processes news articles by first tailoring the content based on reader type (IT or Business) and proficiency level (Enthusiast, Bachelor, Master), and then verifying key numerical claims via external sources. It leverages a configurable LLM (initially Llama-3.1-8B-Instruct) for text processing and query generation, and integrates a web-scraping tool (crawl4ai) to retrieve external evidence for cross-checking.
+
+
+Key Functionalities
+Input & Content Ingestion
+
+
+Multi-format Input: Accept inputs as a URL link, plain text, or a JSON file containing the news article.
+Parsing & Preprocessing: Standardize and parse the input, extract key sections, and prepare for analysis.
+Audience-Based Content Filtering
+
+
+Tailored Refinement: Use the LLM to modify the news text according to:
+Reader Type: IT or Business focus.
+Proficiency Level: Enthusiast, Bachelor, or Master.
+Content Simplification/Enhancement: Adjust technical depth, language style, and context based on the target reader profile.
+RAG (Retrieval Augmented Generation) for Data Verification
+
+
+Query Generation:
+Utilize the LLM to create search queries based on the topic—but intentionally omit explicit numerical details to retrieve unbiased sources.
+Generate two distinct queries to fetch the top relevant search results.
+Search Requests:
+Integrate with a Google search API (or alternative search service) to retrieve links corresponding to the generated queries.
+Web Data Retrieval:
+Leverage crawl4ai to scrape and save the content from the top two search results as Markdown.
+Numerical Data Comparison & Analysis
+
+
+Extraction of Numerical Data: Identify key numerical values (e.g., pricing, statistics) from the original news article.
