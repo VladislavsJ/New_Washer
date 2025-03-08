@@ -1,6 +1,7 @@
 # Project Overview
 This API processes news articles by tailoring content to match the reader's professional background and expertise level, while simultaneously verifying numerical claims against external sources for accuracy. It accepts various input formats, uses AI to adapt content for different audience types, and delivers both refined articles and verification reports in a single structured response.
 
+![Example](https://github.com/user-attachments/assets/d66b0e29-9d25-4605-ae34-00cf880f6a06)
 
 1. **Content Adaptation**: Tailors news content based on the reader's professional background (IT or Business) and expertise level
 2. **Query Generation/web scrapping** using LLM generates the query, that is used to get links from google search, and to scrap the web
