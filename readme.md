@@ -1,5 +1,5 @@
 # Project Overview
-This API processes news articles by tailoring content to match the reader's professional background and expertise level, while simultaneously verifying numerical claims against external sources for accuracy. It accepts various input formats, uses AI to adapt content for different audience types, and delivers both refined articles and verification reports in a single structured response.
+This API processes news articles by tailoring content to match the reader's professional background and expertise level, and verifying numerical claims against external sources for accuracy. It accepts various input formats, uses AI to adapt content for different audience types, and delivers both refined articles and verification reports in a single structured response.
 
 ![Example](https://github.com/user-attachments/assets/d66b0e29-9d25-4605-ae34-00cf880f6a06)
 
