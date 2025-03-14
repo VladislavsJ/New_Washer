@@ -19,3 +19,5 @@ CRAWL4AI_ENDPOINT = "http://localhost:5001"  # Example endpoint, adjust as neede
 
 # Other configurations
 DEBUG = True
+
+#
